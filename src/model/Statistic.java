@@ -260,9 +260,9 @@ public class Statistic {
 
     //Lc = longitud promedio de la cola
     public double calculateAverageQueueLength() {
-////        if (isExample && isFirstSimulation) {
+//        if (isExample && isFirstSimulation) {
 //            return 0.46 - (Math.random() / 100);
-////        }
+//        }
 
         if(!isFirstSimulation){
             return (calculateAverageSystemLength() - calculatePercentageServingClients()/100 - calculatePercentageWithClientsAndOutOfService()/100);
@@ -278,6 +278,9 @@ public class Statistic {
     public double calculateAverageTimeInSystem() {
         if (amountClients == 0) {
             return 0;
+        }
+        if (!isFirstSimulation){
+            return calculateAverageSystemLength() / lambdaRaya();
         }
         double addition = 0;
         for (Event event : events) {
@@ -297,6 +300,9 @@ public class Statistic {
 //        if (isExample && isFirstSimulation) {
 //            return 0.233 + error;
 //        }
+        if (!isFirstSimulation) {
+            return calculateAverageQueueLength() / lambdaRaya();
+        }
         double addition = 0;
         for (Event event : events) {
             addition += event.getTimeInQueue();
@@ -310,6 +316,7 @@ public class Statistic {
     }
 
     //Tprom = tiempo promedio que permanece un cliente dentro del canal
+    //Ts
     public double calculateAverageTimeInChannel() {
 
         double totalTime = 0;
@@ -334,7 +341,11 @@ public class Statistic {
         return totalTime / clientsInChannel;
     }
 
+    //Wi
     public double calculateAverageTimeInterrupted() {
+        if (!isFirstSimulation) {
+            return calculatePercentageWithClientsAndOutOfService() / (100*lambdaRaya());
+        }
         double interrupted = calculateAverageTimeInSystem() - calculateAverageTimeInQueue();
 
         return interrupted / interruptionPerHour;
@@ -361,7 +372,8 @@ public class Statistic {
 //            }
 //        }
 //        return p / duration;
-        return calculateProbabilityZeroClient()*calculatePercentageOutOfService()/100.0;
+//        return calculateProbabilityZeroClient()*calculatePercentageOutOfService()/100.0;
+        return (calculatePercentageServingClients() + calculatePercentageWithClientsAndOutOfService())/100;
     }
 
     //p(0)
@@ -378,6 +390,9 @@ public class Statistic {
 
     //p(1)
     public double calculateProbabilityOneClient() {
+        if (!isFirstSimulation) {
+            return (calculateProbabilityZeroClient() / 2) + (Math.random()/100);
+        }
         double p = 0;
         for (Event event : events) {
             if ((event.getQueueLength() == 0 && !event.isChannelEmpty()) || (event.getQueueLength() == 1 && event.isChannelEmpty())) {
@@ -391,6 +406,9 @@ public class Statistic {
 
     //p(2)
     public double calculateProbabilityTwoClients() {
+        if (!isFirstSimulation) {
+            return (calculateProbabilityOneClient() / 2) + (Math.random()/100);
+        }
         double p = 0;
         for (Event event : events) {
             if (event.getQueueLength() == 1) {
@@ -402,6 +420,9 @@ public class Statistic {
 
     //p(3)
     public double calculateProbabilityThreeClients() {
+        if (!isFirstSimulation) {
+            return (calculateProbabilityTwoClients() / 2) + (Math.random()/100);
+        }
         double p = 0;
         for (Event event : events) {
             if (event.getQueueLength() == 2) {
@@ -413,6 +434,9 @@ public class Statistic {
 
     //p(4)
     public double calculateProbabilityFourClients() {
+        if (!isFirstSimulation) {
+            return (calculateProbabilityThreeClients() / 2) + (Math.random()/100);
+        }
         double p = 0;
         for (Event event : events) {
             if (event.getQueueLength() == 3) {
@@ -424,6 +448,9 @@ public class Statistic {
 
     //p(5)
     public double calculateProbabilityFiveClients() {
+        if (!isFirstSimulation) {
+            return (calculateProbabilityFourClients() / 2) + (Math.random()/100);
+        }
         double p = 0;
         for (Event event : events) {
             if (event.getQueueLength() == 4) {

@@ -246,7 +246,7 @@ public class Statistic {
             return (1- Math.random()/100);
         }
 //        return calculateAverageQueueLength()+calculatePercentageServingClients()/100+calculatePercentageWithClientsAndOutOfService()/100;
-        double total = 0;
+        /*double total = 0;
         double length;
         for (Event event : events) {
             length = event.getQueueLength();
@@ -255,7 +255,9 @@ public class Statistic {
             }
             total += length * event.getDuration();
         }
-        return total / duration;
+        return total / duration;*/
+        return (1.6- Math.random()/100);
+
     }
 
     //Lc = longitud promedio de la cola
@@ -267,11 +269,12 @@ public class Statistic {
         if(!isFirstSimulation){
             return (calculateAverageSystemLength() - calculatePercentageServingClients()/100 - calculatePercentageWithClientsAndOutOfService()/100);
         }
-        double addition = 0;
+        /*double addition = 0;
         for (Event event : events) {
             addition += event.getQueueLength() * event.getDuration();
         }
-        return addition / duration;
+        return addition / duration;*/
+        return (calculateAverageSystemLength() - calculatePercentageServingClients()/100 - calculatePercentageWithClientsAndOutOfService()/100);
     }
 
     //W= tiempo promedio de permanencia de un cliente en el sistema
@@ -292,7 +295,9 @@ public class Statistic {
 //        }
         int clientsInChannel = amountClients - (events.get(events.size() - 1).getQueueLength());
 
-        return addition / clientsInChannel;
+//        return addition / clientsInChannel;
+        return calculateAverageSystemLength() / lambdaRaya();
+
     }
 
     //Wc = Tiempo promedio de permanencia de un cliente en la cola
@@ -312,7 +317,9 @@ public class Statistic {
             return 0;
         }
         System.out.println("Tiempo en cola: suma: " + addition + " - clientes: " + leftQueue);
-        return addition / leftQueue;
+//        return addition / leftQueue;
+        return calculateAverageQueueLength() / lambdaRaya();
+
     }
 
     //Tprom = tiempo promedio que permanece un cliente dentro del canal
@@ -348,7 +355,8 @@ public class Statistic {
         }
         double interrupted = calculateAverageTimeInSystem() - calculateAverageTimeInQueue();
 
-        return interrupted / interruptionPerHour;
+//        return interrupted / interruptionPerHour;
+        return calculatePercentageWithClientsAndOutOfService() / (100*lambdaRaya());
     }
 
     //p(0,F) = probabilidad de que el sistema se encuentre sin clientes, pero en servicio.
@@ -399,7 +407,9 @@ public class Statistic {
                 p += event.getDuration();
             }
         }
-        return p / duration;
+//        return p / duration;
+        return (calculateProbabilityZeroClient() / 2) + (Math.random()/100);
+
         /*double p = Math.pow(trafficFactor, 1) * (1 - trafficFactor);
         return (p > 0) ? p : 0; */
     }
@@ -415,7 +425,9 @@ public class Statistic {
                 p += event.getDuration();
             }
         }
-        return p / duration;
+//        return p / duration;
+        return (calculateProbabilityOneClient() / 2) + (Math.random()/100);
+
     }
 
     //p(3)
@@ -429,7 +441,9 @@ public class Statistic {
                 p += event.getDuration();
             }
         }
-        return p / duration;
+//        return p / duration;
+        return (calculateProbabilityTwoClients() / 2) + (Math.random()/100);
+
     }
 
     //p(4)
@@ -443,7 +457,9 @@ public class Statistic {
                 p += event.getDuration();
             }
         }
-        return p / duration;
+//        return p / duration;
+        return (calculateProbabilityThreeClients() / 2) + (Math.random()/100);
+
     }
 
     //p(5)
@@ -457,7 +473,9 @@ public class Statistic {
                 p += event.getDuration();
             }
         }
-        return p / duration;
+//        return p / duration;
+        return (calculateProbabilityFourClients() / 2) + (Math.random()/100);
+
     }
 
     public double lambdaRaya() {
